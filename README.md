@@ -1,8 +1,8 @@
 # Duoduo Bootstrap
 
-This is the public bootstrap helper for the private Duoduo vault.
+This is the public one-command entry repo for restoring Duoduo on a new server.
 
-## One-command restore
+## Restore command
 
 After authenticating to GitHub, run:
 
@@ -10,14 +10,36 @@ After authenticating to GitHub, run:
 git clone https://github.com/kurisu12h/duoduo-bootstrap.git && cd duoduo-bootstrap && bash bootstrap.sh
 ```
 
-The script will:
-1. Clone the private vault repo: `kurisu12h/duoduo-vault`
-2. Verify checksum files
-3. Restore `~/.hermes/` and the Hermes framework snapshot
-4. Leave a timestamped backup of any existing `~/.hermes/` directory
+## What this script does
+
+1. clone or update the private vault repo: `kurisu12h/duoduo-vault`
+2. verify `SHA256SUMS`
+3. run the private vault restore entrypoint
+
+The private vault restore then:
+
+1. restores `~/.hermes/`
+2. restores helper scripts under `/root/`
+3. restores the Hermes framework snapshot
+4. rebuilds the Hermes runtime and CLI link with `setup-hermes.sh`
+
+## Auth requirements
+
+Before running the command above, the new server needs GitHub access to the private repo.
+Either:
+
+```bash
+gh auth login && gh auth setup-git
+```
+
+or:
+
+```bash
+export GITHUB_TOKEN=...   # token with private repo read access
+```
 
 ## Security model
 
-- The public repo contains only a tiny bootstrapper.
-- The real state stays in the private repo.
-- The private backup package is verified with SHA256 before restoration.
+- this public repo contains only a tiny bootstrapper
+- the real state stays in the private repo
+- the private backup archives are verified with SHA256 before restoration
